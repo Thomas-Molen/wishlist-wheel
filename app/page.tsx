@@ -2,21 +2,27 @@
 
 import { FormEvent } from "react";
 import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [searching, setSearching] = useState<boolean>(false)
 
-  function SearchSteam(e: FormEvent) {
+  function CreateWheel(e: FormEvent) {
     e.preventDefault();
     setSearching(true);
 
-    const steamRef = inputRef?.current?.value.trim()
+    const steamRef = inputRef?.current?.value.trim();
 
-    if (steamRef === undefined || steamRef === '') return;
+    if (!steamRef) {
+      setSearching(false);
+      return;
+    }
 
-    console.log(steamRef)
+    router.push(`/wheel/${encodeURIComponent(steamRef)}`);
   }
+
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -29,7 +35,7 @@ export default function Page() {
             Enter your Steam ID or profile URL to create a spinning wheel of your wishlist games
           </h2>
         </div>
-        <form onSubmit={SearchSteam} className="flex flex-col gap-y-3">
+        <form onSubmit={CreateWheel} className="flex flex-col gap-y-3">
           <label className="text-sm font-medium" htmlFor="steamRef">Steam ID or Profile URL</label>
           <input className="border border-muted rounded-md px-3 py-2"
             ref={inputRef}

@@ -1,11 +1,15 @@
-import { SteamAppDetailsResponse, WishlistResponse } from '@/types/steam'
-import { WishlistItem } from '@/types/wishlist'
-import { NextResponse } from 'next/server'
+import type { SteamAppDetailsResponse, WishlistResponse } from '@/types/steam'
+import type { WishlistItem } from '@/types/wishlist'
+import { NextRequest, NextResponse } from 'next/server'
 
 const appCache = new Map<number, SteamAppDetailsResponse>();
 
-export async function GET(request: Request, { params }: { params: { steamId: string } }) {
-    const { steamId } = params
+export async function GET(req: NextRequest) {
+    const steamId = req.nextUrl.pathname.split('/').pop()
+
+    if (steamId === undefined) {
+        return NextResponse.json({ error: 'No valid steam ID was provided as path suffix' }, { status: 400 }); 
+    }
 
     try {
         const wishlistItemPromises = (await GetWishlist(steamId)).response.items.map(async (i) => {

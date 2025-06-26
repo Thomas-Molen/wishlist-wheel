@@ -1,7 +1,7 @@
 'use client'
 
+import type { WishlistItem } from '@/types/wishlist'
 import { SpinningWheel } from '@/app/components/SpinningWheel'
-import { WishlistItem } from '@/types/wishlist'
 import { use, useEffect, useState } from 'react'
 
 export default function Page({ params }: { params: Promise<{ steamId: string }> }) {
@@ -22,7 +22,7 @@ export default function Page({ params }: { params: Promise<{ steamId: string }> 
   return (
     <div>
       <SpinningWheel
-        items={wishlist.slice(0, 10).map(app => {
+        items={wishlist.map(app => {
           return {
             name: app.name,
             priority: app.priority,
